@@ -1,0 +1,8 @@
+title Note upload
+
+note over Browser: the user inserts a new note
+note over Browser: The js code overrides the default behaviour of the form to prevent reloading the page.
+note over Browser: The js code creates the data adds to the list and rerenders the note list
+note over Browser: The js code sends the data to the server in a json format
+Browser->Server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+Server-->Browser: code 201

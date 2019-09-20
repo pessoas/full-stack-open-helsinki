@@ -1,0 +1,16 @@
+title Note upload
+
+Browser->Server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note
+note over Browser: user sends info to server
+Server-->Browser: 302 found
+note over Server: Server receives the new note and sends a redirect to browser
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/notes
+Server-->Browser: HTML page
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+Server-->Browser: main.css
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.js
+Server-->Browser: main.js
+note over Browser: Browser starts main.js and asks for the JSON data
+Browser->Server: https://fullstack-exampleapp.herokuapp.com/data.json
+Server-->Browser: data.json
+note over Browser: Browser renders page with the new data
