@@ -30,10 +30,6 @@ const App = (props) => {
     setVotes(copy)
   }
 
-  const mostVoted = (votes) => {
-
-  }
-
   return (
     <div>
       <h2>Anecdote of the day</h2>
