@@ -1,5 +1,11 @@
 import React, { useState } from 'react'
 
+import { ContactsFilter } from './components/ContactsFilter';
+import { ContactForm } from './components/ContactForm';
+import { ShowContacts } from './components/ShowContacts';
+
+
+
 export const App = () => {
     const [persons, setPersons] = useState([
         { name: 'Arto Hellas', phone: '040-123456' },
@@ -57,96 +63,18 @@ export const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            <div>
-                filter shown with: <input value={filterName} onChange={handleFilter} />
-            </div>
+
+                <ContactsFilter filter={filterName} hfilter={handleFilter}/>
 
             <h3>Add new contact </h3>
 
+                <ContactForm submit={addNew} name={newName} hname={handleNewName} phone={newPhone} hphone={handleNewPhone} />
             
-
-            <form onSubmit={addNew}>
-                <div>
-                    name: <input value={newName} onChange={handleNewName} />
-                </div>
-                <div>
-                    number: <input value={newPhone} onChange={handleNewPhone} />
-                </div>
-                <div>
-                    <button type="submit">add</button>
-                </div>
-            </form>
             <h3>Contacts</h3>
+            
                 <ShowContacts list={persons} filter={filterName} />
        </div>);
 }
 
-const ShowContacts = (props) => {
-    //console.log(props.list)
-    //console.log(props.filter)
-    
-    if(!props.filter) {
-        const conts = () => props.list.map(content => {
-            return <Contact name={content.name} phone={content.phone} key={content.name} />
-        })
-        return(
-            <div> {conts()} </div>
-        )
-    }else{
-        const conts = () => props.list.map(content => {
-            if(content.name.toUpperCase().includes(props.filter.toUpperCase())){
-                return <Contact name={content.name} phone={content.phone} key={content.name} />
-            }else{return <></>}
-        })
-        return(
-            <div> {conts()} </div>
-        )
-    }
-    
-}
-
-const Contact = (props) => {
-    //console.log(props)
-    return (<p>
-        {props.name} {props.phone}
-    </p>)
-}
-
-
-const ContactForm = ({submit, name, hname, phone, hphone}) => {
-    console.log()
-    console.log()
-    return(
-    <form onSubmit={submit}>
-        <div>
-            name: <input value={name} onChange={hname} />
-        </div>
-        <div>
-            number: <input value={phone} onChange={hphone} />
-        </div>
-        <div>
-            <button type="submit">add</button>
-        </div>
-    </form>)
-}
-
 export default App
 
-/*
-<form onSubmit={addNew}>
-                <div>
-                    name: <input value={newName} onChange={handleNewName} />
-                </div>
-                <div>
-                    number: <input value={newPhone} onChange={handleNewPhone} />
-                </div>
-                <div>
-                    <button type="submit">add</button>
-                </div>
-            </form>
-
-
-<ContactForm submit={(e) => addNew(e)} name={(e) => newName(e)} hname={(e) => handleNewName(e)} phone={(e) => newPhone(e)} hphone={(e) => handleNewPhone(e)} />
-
-
-*/
