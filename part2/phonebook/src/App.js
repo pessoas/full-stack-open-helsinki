@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
 import { ContactsFilter } from './components/ContactsFilter';
 import { ContactForm } from './components/ContactForm';
@@ -7,23 +8,28 @@ import { ShowContacts } from './components/ShowContacts';
 
 
 export const App = () => {
-    const [persons, setPersons] = useState([
-        { name: 'Arto Hellas', phone: '040-123456' },
-        { name: 'Ada Lovelace', phone: '39-44-5323523' },
-        { name: 'Dan Abramov', phone: '12-43-234345' },
-        { name: 'Mary Poppendieck', phone: '39-23-6423122' }
-    ])
-    const [newName, setNewName] = useState('');
-
+    const [persons, setPersons] = useState([])
+    const [newName, setNewName] = useState('')
     const [newPhone, setNewPhone] = useState('')
-
     const [filterName, setNewFilter] = useState('')
+
+    useEffect(() => {
+        console.log('effect')
+        axios
+            .get('http://localhost:3001/persons')
+            .then(response => {
+                console.log('promise fulfilled')
+                setPersons(response.data)
+            })
+    }, [])
+    console.log(`render ${persons.length} persons`)
+    console.log(persons)
 
     const addNew = (event) => {
         event.preventDefault()
         const contactObject = {
             name: newName,
-            phone: newPhone,
+            number: newPhone,
         }
 
         let flag = 0
