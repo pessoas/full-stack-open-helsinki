@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 
-import { ContactsFilter } from './components/ContactsFilter';
-import { ContactForm } from './components/ContactForm';
-import { ShowContacts } from './components/ShowContacts';
 
+import { ContactsFilter } from './components/ContactsFilter'
+import { ContactForm } from './components/ContactForm'
+import { Contact } from './components/Contact'
+
+import contactService from './services/contacts'
 
 
 export const App = () => {
@@ -15,39 +16,91 @@ export const App = () => {
 
     useEffect(() => {
         console.log('effect')
-        axios
-            .get('http://localhost:3001/persons')
-            .then(response => {
-                console.log('promise fulfilled')
-                setPersons(response.data)
+        contactService
+            .getAll()
+            .then(intialContacts => {
+                setPersons(intialContacts)
             })
     }, [])
-    console.log(`render ${persons.length} persons`)
-    console.log(persons)
+    //console.log(`render ${persons.length} persons`)
+    //console.log(persons)
 
     const addNew = (event) => {
         event.preventDefault()
-        const contactObject = {
-            name: newName,
-            number: newPhone,
-        }
 
-        let flag = 0
-
-        persons.forEach((item) => {
-            if(item.name.toUpperCase() === newName.toUpperCase()){
-                flag++
-            }
-        })
-
-        if(flag > 0){
-            window.alert(`${newName} is already added to phonebook`)
+        if(!newName || !newPhone){
+            alert('Name and or number are empty')
         }else{
-            setPersons(persons.concat(contactObject))
-            setNewName('')
-            setNewPhone('')
+
+            const dupl = persons.find(p => p.name.toUpperCase() === newName.toUpperCase())
+            console.log(dupl)
+            
+            if(dupl){
+                if(window.confirm('Want to update the contact?')){
+                    const contactObject = {
+                        name: newName,
+                        number: newPhone,
+                    }
+                    const resultList = persons.filter( p => p.id !== dupl.id)
+                    contactService
+                        .update(dupl.id, contactObject)
+                        .then(returnedContact => {
+                            setPersons(resultList.concat(returnedContact))
+                            setNewName('')
+                            setNewPhone('')
+                        })
+                }
+            }else{
+                const contactObject = {
+                    name: newName,
+                    number: newPhone,
+                }
+
+                contactService
+                    .addContact(contactObject)
+                    .then(returnedContact => {
+                        setPersons(persons.concat(returnedContact))
+                        setNewName('')
+                        setNewPhone('')
+                    })
+            }
         }
-        
+      
+    }
+    
+    const removeContact = id => {
+        console.log(id)
+        if(window.confirm('Do you realy want to delete the contact?')){
+            const contact = persons.find(p => p.id === id )
+            const resultList = persons.filter( p => p.id !== id)
+            console.log(contact)
+            contactService
+                .remove(contact.id)
+                .then(returnedContact => {
+                    console.log(returnedContact)
+                    setPersons(resultList)
+                })
+        }
+    }
+
+    const showContacts = () => {
+        //console.log(props.list)
+        //console.log(props.filter)
+        if (!filterName) {
+            const conts = () => persons.map(content => {
+                return <Contact name={content.name} phone={content.number} removeContact={()=>removeContact(content.id)} key={content.id} />
+            })
+            return (<div> {conts()} </div>)
+        }
+        else {
+            const conts = () => persons.map(content => {
+                if (content.name.toUpperCase().includes(filterName.toUpperCase())) {
+                    console.log(content.id)
+                    return <Contact name={content.name} phone={content.number} removeContact={()=>removeContact(content.id)} key={content.id} />;
+                }
+            })
+            return (<div> {conts()} </div>)
+        }
     }
 
     const handleNewName = (event) => {
@@ -77,10 +130,13 @@ export const App = () => {
                 <ContactForm submit={addNew} name={newName} hname={handleNewName} phone={newPhone} hphone={handleNewPhone} />
             
             <h3>Contacts</h3>
-            
-                <ShowContacts list={persons} filter={filterName} />
+                {showContacts()}
+                
        </div>);
 }
 
+/*
+<ShowContacts list={persons} filter={filterName} removeContact={removeContact}/>
+*/
 export default App
 

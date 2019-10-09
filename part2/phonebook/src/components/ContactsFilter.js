@@ -1,6 +1,8 @@
-import React from 'react';
+import React from 'react'
 export const ContactsFilter = ({ filter, hfilter }) => {
-    return (<div>
-        filter shown with: <input value={filter} onChange={hfilter} />
-    </div>);
-};
+    return (
+        <div>
+            filter shown with: <input value={filter} onChange={hfilter} placeholder='enter search'/>
+        </div>
+    )
+}
