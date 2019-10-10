@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react'
 import { ContactsFilter } from './components/ContactsFilter'
 import { ContactForm } from './components/ContactForm'
 import { Contact } from './components/Contact'
+import  SuccessNotification  from './components/SuccessNotification'
+import ErrorNotification from './components/ErrorNotification'
 
 import contactService from './services/contacts'
 
@@ -13,6 +15,8 @@ export const App = () => {
     const [newName, setNewName] = useState('')
     const [newPhone, setNewPhone] = useState('')
     const [filterName, setNewFilter] = useState('')
+    const [okMessage, setOkMessage] = useState(null)
+    const [errorMessage, setErrorMessage] = useState(null)
 
     useEffect(() => {
         console.log('effect')
@@ -49,6 +53,12 @@ export const App = () => {
                             setNewName('')
                             setNewPhone('')
                         })
+                        .then(() => {
+                            setOkMessage(`Contact ${contactObject.name} updated`)
+                            setTimeout(()=>{
+                                setOkMessage(null)
+                            }, 5000)
+                        }) 
                 }
             }else{
                 const contactObject = {
@@ -62,6 +72,12 @@ export const App = () => {
                         setPersons(persons.concat(returnedContact))
                         setNewName('')
                         setNewPhone('')
+                    })
+                    .then(() => {
+                        setOkMessage(`Contact ${contactObject.name} succesfully added`)
+                        setTimeout(() => {
+                            setOkMessage(null)
+                        }, 5000)
                     })
             }
         }
@@ -80,6 +96,13 @@ export const App = () => {
                     console.log(returnedContact)
                     setPersons(resultList)
                 })
+                .catch(error => {
+                    setErrorMessage(`Information of ${contact.name} has already been removed from server`)
+                    setTimeout(() => {
+                        setErrorMessage(null)
+                    }, 5000)
+                    setPersons(persons.filter(n => n.id !== id))
+                }) 
         }
     }
 
@@ -126,7 +149,8 @@ export const App = () => {
                 <ContactsFilter filter={filterName} hfilter={handleFilter}/>
 
             <h3>Add new contact </h3>
-
+                <SuccessNotification message={okMessage} />
+                <ErrorNotification message={errorMessage} />
                 <ContactForm submit={addNew} name={newName} hname={handleNewName} phone={newPhone} hphone={handleNewPhone} />
             
             <h3>Contacts</h3>
