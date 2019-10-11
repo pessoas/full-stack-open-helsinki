@@ -1,4 +1,7 @@
-import React from 'react';
-export const Lang = (props) => {
+import React from 'react'
+
+const Lang = (props) => {
   return (<li>{props.name}</li>);
-};
+}
+
+export default Lang
