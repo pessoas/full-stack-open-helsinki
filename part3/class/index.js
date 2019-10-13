@@ -1,4 +1,5 @@
 const express = require('express')
+const bodyParser = require('body-parser')
 
 const app = express()
 
@@ -24,6 +25,8 @@ let notes = [
   ]
 
 
+  app.use(bodyParser.json())
+
   app.get('/', (request, response) => {
       response.send('<h1>Hello World!</h1>')
   })
@@ -48,6 +51,35 @@ let notes = [
     notes = notes.filter(note => note.id !== id)
 
     response.status(204).end()
+  })
+
+  const generateId = () => {
+    const maxId = notes.length > 0
+      ? Math.max(...notes.map(n => n.id))
+      : 0
+      return maxId + 1
+  }
+
+  app.post('/notes', (request, response) => {
+
+    const note = request.body
+
+    if(!body.content){
+      return response.status(400).json({
+        error:'content missing'
+      })
+    }
+
+    const note = {
+      content: body.content,
+      important: body.important || false,
+      date: new Date(),
+      id: generateId(),
+    }
+
+    notes = notes.concat(note)
+
+    response.json(note)
   })
 
 
