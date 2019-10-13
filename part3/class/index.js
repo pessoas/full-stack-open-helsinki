@@ -62,7 +62,7 @@ let notes = [
 
   app.post('/notes', (request, response) => {
 
-    const note = request.body
+    const body = request.body
 
     if(!body.content){
       return response.status(400).json({
