@@ -1,7 +1,9 @@
 const express = require('express')
+const bodyParser = require('body-parser')
 
 const app = express()
 
+// hardcoded list of contacts
 let persons = [
     {
         "name": "Arto Hellas",
@@ -25,6 +27,10 @@ let persons = [
     }
 ]
 
+
+// app routes and uses
+app.use(bodyParser.json())
+
 app.get('/', (request, response) => {
     response.send('<h1>Hello There</h1>')
 })
@@ -44,7 +50,7 @@ app.get('/api/persons/:id', (request, response) => {
     if(person){
         response.json(person)
     }else{
-        response.status(400).end()
+        response.status(404).end()
     }
 })
 
@@ -55,6 +61,53 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end()
 })
 
+app.post('/api/persons', (request, response) => {
+
+    const body = request.body
+
+    //const person = persons.find(person => person.name.toUpperCase() === body.name.toUpperCase())
+
+    if(body.name.length === 0 || body.number.length === 0){
+        return response.status(400).json({
+            error:'name or number is missing'
+        })
+    }else if(persons.find(person => person.name.toUpperCase() === body.name.toUpperCase())){
+        return response.status(400).json({
+            error: 'name must be unique'
+        })
+    }
+    //console.log('ini')
+
+    const newContact = {
+        name: body.name,
+        number: body.number,
+        id: generateId()
+    }
+    //console.log('end')
+
+    persons = persons.concat(newContact)
+
+    response.json(newContact)
+})
+
+
+
+//functions
+const generateId = () => {
+    const id = persons.length > 0 
+        ? Math.floor(Math.random() * (999999) + 1)
+        : 1
+    
+    const person = persons.find(person => person.id === id)   
+    
+    //console.log(id)
+    
+    if(!person){
+        return id
+    }else{
+        generateId()
+    }
+}
 
 const port = 3001
 app.listen(port)
