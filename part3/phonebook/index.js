@@ -1,5 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const morgan = require('morgan')
 
 const app = express()
 
@@ -28,8 +29,18 @@ let persons = [
 ]
 
 
-// app routes and uses
+// app uses
 app.use(bodyParser.json())
+
+//app.use(morgan('tiny'))
+
+morgan.token('data', (request, response) => {
+    return JSON.stringify(request.body)
+})
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
+
+// app routes
 
 app.get('/', (request, response) => {
     response.send('<h1>Hello There</h1>')
