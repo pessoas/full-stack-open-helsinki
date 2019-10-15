@@ -25,7 +25,7 @@ let notes = [
     }
   ]
 
-
+app.use(express.static('build'))
 app.use(bodyParser.json())
 
 const requestLogger = (request, response, next) => {
