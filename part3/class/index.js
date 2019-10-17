@@ -1,9 +1,37 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const mongoose = require('mongoose')
+
+const Note = require('./models/note')
+
 
 const app = express()
 
+//DATABASE CONFIG
+/*
+
+const url = `mongodb+srv://fullstack:${password}@cluster0-2e1jk.mongodb.net/note-app?retryWrites=true&w=majority`
+
+mongoose.connect(url, { useNewUrlParser: true })
+
+const noteSchema = new mongoose.Schema({
+    content: String,
+    date: Date,
+    important: Boolean,
+})
+
+noteSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
+  }
+})
+
+const Note = mongoose.model('Note', noteSchema)*/
+
+/*
 let notes = [
     {
       id: 1,
@@ -23,7 +51,7 @@ let notes = [
       date: "2019-05-30T19:20:14.298Z",
       important: true
     }
-  ]
+  ]*/
 
 app.use(express.static('build'))
 app.use(bodyParser.json())
@@ -44,7 +72,9 @@ app.get('/', (request, response) => {
 })
 
 app.get('/api/notes', (request,response) =>{
-    response.json(notes)
+    Note.find({}).then(notes => {
+      response.json(notes.map(note => note.toJSON()))
+    })
 })
 
 app.get('/api/notes/:id', (request, response) => {
@@ -100,7 +130,8 @@ const unknownEndpoint = (request, response) => {
 }
 app.use(unknownEndpoint)
 
-const PORT = process.env.PORT || 3001
+//const { port } = require('./config')
+const { PORT } = require('./config')
 app.listen(PORT, () => {
   console.log(`Server running in port ${PORT}`)
 })
