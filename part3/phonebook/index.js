@@ -7,31 +7,6 @@ const Person = require('./models/person')
 
 const app = express()
 
-// hardcoded list of contacts
-/*
-let persons = [
-    {
-        "name": "Arto Hellas",
-        "number": "040-123456",
-        "id": 1
-    },
-    {
-        "name": "Ada Lovelace",
-        "number": "39-44-5323523",
-        "id": 2
-    },
-    {
-        "name": "Dan Abramov",
-        "number": "12-43-234345",
-        "id": 3
-    },
-    {
-        "name": "Mary Poppendieck",
-        "number": "39-23-6423122",
-        "id": 4
-    }
-]
-*/
 
 // app uses
 app.use(express.static('build'))
@@ -102,21 +77,6 @@ app.post('/api/persons', (request, response) => {
 
 
 //functions
-const generateId = () => {
-    const id = persons.length > 0 
-        ? Math.floor(Math.random() * (999999) + 1)
-        : 1
-    
-    const person = persons.find(person => person.id === id)   
-    
-    //console.log(id)
-    
-    if(!person){
-        return id
-    }else{
-        generateId()
-    }
-}
 
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
