@@ -3,9 +3,12 @@ const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
 
+const Person = require('./models/person')
+
 const app = express()
 
 // hardcoded list of contacts
+/*
 let persons = [
     {
         "name": "Arto Hellas",
@@ -28,7 +31,7 @@ let persons = [
         "id": 4
     }
 ]
-
+*/
 
 // app uses
 app.use(express.static('build'))
@@ -50,7 +53,9 @@ app.get('/', (request, response) => {
 })
 
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    Person.find({}).then(persons => {
+        response.json(persons.map(person => person.toJSON()))
+    })
 })
 
 app.get('/info', (request, response) => {
@@ -58,14 +63,10 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const person = persons.find(person => person.id === id)
-
-    if(person){
-        response.json(person)
-    }else{
-        response.status(404).end()
-    }
+    Person.findById(request.params.id).then(person => {
+        response.toJSON(person)
+    })
+    
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -79,29 +80,20 @@ app.post('/api/persons', (request, response) => {
 
     const body = request.body
 
-    //const person = persons.find(person => person.name.toUpperCase() === body.name.toUpperCase())
-
-    if(body.name.length === 0 || body.number.length === 0){
+    if(body.name === undefined || body.number === undefined) {
         return response.status(400).json({
-            error:'name or number is missing'
-        })
-    }else if(persons.find(person => person.name.toUpperCase() === body.name.toUpperCase())){
-        return response.status(400).json({
-            error: 'name must be unique'
+            error: 'name or number is missing'
         })
     }
-    //console.log('ini')
 
-    const newContact = {
+    const person = new Person({
         name: body.name,
         number: body.number,
-        id: generateId()
-    }
-    //console.log('end')
+    })
 
-    persons = persons.concat(newContact)
-
-    response.json(newContact)
+    person.save().then(savedPerson => {
+        response.json(savedPerson.toJSON())
+    })
 })
 
 
@@ -128,7 +120,7 @@ const unknownEndpoint = (request, response) => {
   }
   app.use(unknownEndpoint)
 
-const PORT = process.env.PORT || 3001
+const { PORT } = require('./config')
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
