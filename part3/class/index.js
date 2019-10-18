@@ -34,7 +34,7 @@ app.get('/api/notes', (request,response) =>{
 
 app.get('/api/notes/:id', (request, response) => {
   Note.findById(request.params.id).then(note => {
-    response.json(note.toJSON)
+    response.json(note.toJSON())
   })
 })
 
