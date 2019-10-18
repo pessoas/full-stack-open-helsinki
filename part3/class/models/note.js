@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 
+mongoose.set('useAndModify', false)
+
 const { url } = require('../config')
 
 console.log('connecting to', url)
