@@ -86,7 +86,7 @@ app.put('/api/notes/:id', (request, response, next) => {
     .then(updatedNote => {
       response.json(updatedNote.toJSON())
     })
-    .catch(erro => next(error))
+    .catch(error => next(error))
 })
 
 const unknownEndpoint = (request, response) => {
@@ -97,10 +97,10 @@ const unknownEndpoint = (request, response) => {
 app.use(unknownEndpoint)
 
 
-const errorHandler = (errro, request, response, next) => {
+const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
-  if(error.name === 'CastError' && error.king === 'ObjectId'){
+  if(error.name === 'CastError' && error.kind === 'ObjectId'){
     return response.status(400).send({ error: 'malformatted id' })
   }
   next(error)

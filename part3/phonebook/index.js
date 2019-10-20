@@ -37,14 +37,20 @@ app.get('/info', (request, response) => {
     response.send(`<p>Phonebook has info of ${persons.length} people</p><p>${new Date()}</p>`)
 })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
     //console.log(request.params.id)
     Person.findById(request.params.id)
         .then(person => {
             //console.log(person)
-            response.json(person.toJSON())
+            if(person){
+                response.json(person.toJSON())
+            }else{
+                response.status(404).end()
+            }
         })
-    
+        .catch(error => {
+            next(error)
+        })
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -71,19 +77,31 @@ app.post('/api/persons', (request, response) => {
         number: body.number,
     })
 
-    person.save().then(savedPerson => {
-        response.json(savedPerson.toJSON())
-    })
+    person.save()
+        .then(savedPerson => {
+            response.json(savedPerson.toJSON())
+        })
 })
 
 
 
-//functions
 
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
   }
-  app.use(unknownEndpoint)
+
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+
+    if(error.name === 'CastError' && error.kind === 'ObjectId') {
+        return response.status(400).send({ error: 'malformatted id' })
+    }
+    next(error)
+}
+
+app.use(errorHandler)
 
 const { PORT } = require('./config')
 app.listen(PORT, () => {
