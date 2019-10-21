@@ -34,7 +34,10 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.get('/info', (request, response) => {
-    response.send(`<p>Phonebook has info of ${persons.length} people</p><p>${new Date()}</p>`)
+    Person.estimatedDocumentCount()
+        .then(count => {
+            response.send(`<p>Phonebook has info of ${count} people</p><p>${new Date()}</p>`)
+        })
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
@@ -81,6 +84,20 @@ app.post('/api/persons', (request, response) => {
         .then(savedPerson => {
             response.json(savedPerson.toJSON())
         })
+})
+
+app.put('/api/persons/:id', (request, response, next) => {
+
+    Person.findById(request.params.id)
+        .then(person => {
+            person.name = request.body.name
+            person.number = request.body.number
+            person.save()
+                .then(updatedPerson => {
+                    response.json(updatedPerson.toJSON())
+                })
+        })
+        .catch(error => next(error))
 })
 
 
