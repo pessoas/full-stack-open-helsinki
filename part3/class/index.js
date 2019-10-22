@@ -22,13 +22,13 @@ app.use(requestLogger)
 app.use(cors())
 
 app.get('/', (request, response) => {
-    response.send('<h1>Hello World!</h1>')
+  response.send('<h1>Hello World!</h1>')
 })
 
-app.get('/api/notes', (request,response) =>{
-    Note.find({}).then(notes => {
-      response.json(notes.map(note => note.toJSON()))
-    })
+app.get('/api/notes', (request,response) => {
+  Note.find({}).then(notes => {
+    response.json(notes.map(note => note.toJSON()))
+  })
 })
 
 app.get('/api/notes/:id', (request, response, next) => {
@@ -50,7 +50,7 @@ app.delete('/api/notes/:id', (request, response, next) => {
       response.status(204).end()
     })
     .catch(error => next(error))
-  
+
 })
 
 app.post('/api/notes', (request, response, next) => {
