@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const mongoose = require('mongoose')
 
+/*
 const blogSchema = mongoose.Schema({
   title: String,
   author: String,
@@ -13,6 +14,9 @@ const blogSchema = mongoose.Schema({
 })
 
 const Blog = mongoose.model('Blog', blogSchema)
+*/
+
+const Blog = require('./models/blog')
 
 const { mongoUrl } = require('./utils/config')
 mongoose.connect(mongoUrl, { useNewUrlParser: true })
