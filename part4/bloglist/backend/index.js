@@ -24,6 +24,11 @@ mongoose.connect(mongoUrl, { useNewUrlParser: true })
 app.use(cors())
 app.use(bodyParser.json())
 
+const blogsRoute = require('./controllers/blogs')
+
+app.use('/api/blogs', blogsRoute)
+
+/*
 app.get('/api/blogs', (request, response) => {
   Blog
     .find({})
@@ -41,6 +46,8 @@ app.post('/api/blogs', (request, response) => {
       response.status(201).json(result)
     })
 })
+
+*/
 
 const { PORT } = require('./utils/config')
 app.listen(PORT, () => {
