@@ -9,7 +9,7 @@ blogsRouter.get('/', (request, response) => {
         })
 })
 
-blogsRouter.get('/:id', (request, response) => {
+blogsRouter.get('/:id', (request, response, next) => {
     Blog.findById(request.params.id)
         .then(blog => {
             if(blog){
@@ -18,16 +18,18 @@ blogsRouter.get('/:id', (request, response) => {
                 response.status(404).end()
             }
         })
+        .catch(error => next(error))
 })
 
-blogsRouter.delete('/:id', (request, response) => {
+blogsRouter.delete('/:id', (request, response, next) => {
     Blog.findByIdAndRemove(request.params.id)
         .then(() => {
             response.status(204).end()
         })
+        .catch(error => next(error))
 })
 
-blogsRouter.post('/', (request, response) => {
+blogsRouter.post('/', (request, response, next) => {
     const body = request.body
 
     const blog = new Blog({
@@ -42,6 +44,7 @@ blogsRouter.post('/', (request, response) => {
         .then(savedBlog => {
             response.json(savedBlog.toJSON())
         })
+        .catch(error => next(error))
 })
 
 module.exports = blogsRouter
