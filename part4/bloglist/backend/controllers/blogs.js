@@ -20,6 +20,13 @@ blogsRouter.get('/:id', (request, response) => {
         })
 })
 
+blogsRouter.delete('/:id', (request, response) => {
+    Blog.findByIdAndRemove(request.params.id)
+        .then(() => {
+            response.status(204).end()
+        })
+})
+
 blogsRouter.post('/', (request, response) => {
     const body = request.body
 
