@@ -18,7 +18,7 @@ mongoose.connect(config.mongoUrl, { useNewUrlParser: true })
     })
 
 app.use(bodyParser.json())
-//app.use(middleware.requestLogger)
+app.use(middleware.requestLogger)
 
 app.use('/api/blogs', blogsRouter)
 
