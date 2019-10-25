@@ -6,16 +6,15 @@ const blogsRouter = require('./controllers/blogs')
 const middleware = require('./utils/middleware')
 const mongoose = require('mongoose')
 
-
 console.log('connecting to', config.mongoUrl)
 
 mongoose.connect(config.mongoUrl, { useNewUrlParser: true })
-    .then(() => {
-        console.log('Connect to MongoDB')
-    })
-    .catch(error => {
-        console.log(`Error connecting to MongoDB: ${error.message}`)
-    })
+  .then(() => {
+    console.log('Connect to MongoDB')
+  })
+  .catch(error => {
+    console.log(`Error connecting to MongoDB: ${error.message}`)
+  })
 
 app.use(bodyParser.json())
 app.use(middleware.requestLogger)

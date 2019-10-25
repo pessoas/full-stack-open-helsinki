@@ -4,7 +4,7 @@ const dummy = blogs => {
 
 const totalLikes = blogs => {
   const reducer = (likes, item) => {
-    return {likes: likes.likes + item.likes}
+    return { likes: likes.likes + item.likes }
   }
 
   return blogs.length === 0
@@ -39,4 +39,3 @@ module.exports = {
   totalLikes,
   favouriteBlog
 }
-
