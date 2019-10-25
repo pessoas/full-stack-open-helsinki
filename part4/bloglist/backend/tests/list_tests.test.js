@@ -1,26 +1,17 @@
 const listHelper = require('../utils/list_helper')
 
-test('dummy return one', () => {
-  const blogs = []
+const listWithOneBlog = [
+  {
+    _id: '5a422aa71b54a676234d17f8',
+    title: 'Go To Statement Considered Harmful',
+    author: 'Edsger W. Dijkstra',
+    url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 5,
+    __v: 0
+  }
+]
 
-  const result = listHelper.dummy(blogs)
-
-  expect(result).toBe(1)
-})
-
-describe('total likes', () => {
-  const listWithOneBlog = [
-    {
-      _id: '5a422aa71b54a676234d17f8',
-      title: 'Go To Statement Considered Harmful',
-      author: 'Edsger W. Dijkstra',
-      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-      likes: 5,
-      __v: 0
-    }
-  ]
-
-  const blogs = [
+const blogs = [
     {
       _id: "5a422a851b54a676234d17f7",
       title: "React patterns",
@@ -71,6 +62,16 @@ describe('total likes', () => {
     }  
   ]
 
+test('dummy return one', () => {
+  const blogs = []
+
+  const result = listHelper.dummy(blogs)
+
+  expect(result).toBe(1)
+})
+
+describe('total likes', () => {
+  
   test('of empty list is zero', () => {
     expect(listHelper.totalLikes([])).toBe(0)
   })
@@ -83,5 +84,28 @@ describe('total likes', () => {
   test('of a bigger list is calculated right', () => {
     const result = listHelper.totalLikes(blogs)
     expect(result).toBe(36)
+  })
+})
+
+
+describe('favourite blog', () => {
+  const control = {
+    title: "Canonical string reduction",
+    author: "Edsger W. Dijkstra",
+    likes: 12
+  }
+
+  test('of a empty list is null', () => {
+    const result = listHelper.favouriteBlog([])
+    expect(result).toEqual(null)
+  })
+
+  test('when list has only one blog equals to it', () => {
+    const result = listHelper.favouriteBlog(listWithOneBlog)
+  })
+
+  test('of a bigger list is calculated right', () => {
+    const result = listHelper.favouriteBlog(blogs)
+    expect(result).toEqual(control)
   })
 })
