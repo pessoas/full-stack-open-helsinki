@@ -1,3 +1,4 @@
+/*
 const http = require('http')
 const express = require('express')
 const app = express()
@@ -5,7 +6,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const mongoose = require('mongoose')
 
-/*
+
 const blogSchema = mongoose.Schema({
   title: String,
   author: String,
@@ -14,7 +15,7 @@ const blogSchema = mongoose.Schema({
 })
 
 const Blog = mongoose.model('Blog', blogSchema)
-*/
+
 
 const Blog = require('./models/blog')
 
@@ -28,7 +29,7 @@ const blogsRoute = require('./controllers/blogs')
 
 app.use('/api/blogs', blogsRoute)
 
-/*
+
 app.get('/api/blogs', (request, response) => {
   Blog
     .find({})
@@ -49,7 +50,19 @@ app.post('/api/blogs', (request, response) => {
 
 */
 
+const app = require('./app')
+const http = require('http')
+const config = require('./utils/config')
+
+const server = http.createServer(app)
+
+server.listen(config.PORT, () => {
+    console.log(`Server running on port ${config.PORT}`)
+})
+
+/*
 const { PORT } = require('./utils/config')
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
+*/
