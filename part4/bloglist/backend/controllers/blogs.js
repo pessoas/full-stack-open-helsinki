@@ -6,24 +6,26 @@ blogsRouter.get('/', async (request, response) => {
   response.json(allBlogs.map(blog => blog.toJSON()))
 })
 
-blogsRouter.get('/:id', (request, response, next) => {
-  Blog.findById(request.params.id)
-    .then(blog => {
-      if (blog) {
-        response.json(blog.toJSON())
-      } else {
-        response.status(404).end()
-      }
-    })
-    .catch(error => next(error))
+blogsRouter.get('/:id', async (request, response, next) => {
+  try {
+    const blog = await Blog.findById(request.params.id)
+    if(blog) {
+      response.json(blog.toJSON())
+    }else {
+      response.status(404).end()
+    }
+  } catch (exception) {
+    next(exception)
+  }
 })
 
-blogsRouter.delete('/:id', (request, response, next) => {
-  Blog.findByIdAndRemove(request.params.id)
-    .then(() => {
-      response.status(204).end()
-    })
-    .catch(error => next(error))
+blogsRouter.delete('/:id', async (request, response, next) => {
+  try{  
+    await Blog.findByIdAndRemove(request.params.id)
+    response.status(204).end()
+  } catch (exception) {
+    next(exception)
+  }
 })
 
 blogsRouter.post('/', async (request, response, next) => {
@@ -41,9 +43,26 @@ blogsRouter.post('/', async (request, response, next) => {
       url: body.url,
       likes: body.likes === undefined ? 0 : body.likes
     })
+  
+  try{
+    const savedBlog = await blog.save()
+    response.json(savedBlog.toJSON())
+  } catch(exception) {
+    next(exception)
+  }
+})
 
-  const savedBlog = await blog.save()
-  response.json(savedBlog.toJSON())
+blogsRouter.put('/:id', async (request, response, next) => {
+  const body = request.body
+  try{
+    const blog = await Blog.findById(request.params.id)
+    blog.likes = body.likes
+    
+    await blog.save()
+    response.json(blog.toJSON())
+  }catch(exception){
+    next(exception)
+  }
 })
 
 module.exports = blogsRouter
