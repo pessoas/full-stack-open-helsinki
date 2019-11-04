@@ -9,14 +9,13 @@ usersRouter.get('/', async (request, response) => {
 })
 
 usersRouter.post('/', async (request, response, next) => {
-  try{
-
+  try {
     const body = request.body
-    
-    if(!body.password) {
-      return response.status(400).json({ error: "password not provided" })
-    }else if(body.password.length <= 3){
-      return response.status(400).json({ error: "password too short" })
+
+    if (!body.password) {
+      return response.status(400).json({ error: 'password not provided' })
+    } else if (body.password.length <= 3) {
+      return response.status(400).json({ error: 'password too short' })
     }
 
     const saltRounds = 10
@@ -25,13 +24,13 @@ usersRouter.post('/', async (request, response, next) => {
     const newUser = new User({
       username: body.username,
       name: body.name,
-      passwordHash,
+      passwordHash
     })
 
     const savedUser = await newUser.save()
 
     response.json(savedUser)
-  }catch(exception){
+  } catch (exception) {
     next(exception)
   }
 })

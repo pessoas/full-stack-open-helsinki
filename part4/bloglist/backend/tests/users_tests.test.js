@@ -7,13 +7,13 @@ const bcrytp = require('bcrypt')
 
 const api = supertest(app)
 
-beforeEach( async () => {
+beforeEach(async () => {
   await User.deleteMany({})
 
-  //const userObjects = helper.initialUsers.map(user => new User(user))
-  //const promiseArray = userObjects.map(user => user.save())
+  // const userObjects = helper.initialUsers.map(user => new User(user))
+  // const promiseArray = userObjects.map(user => user.save())
   const promiseArray = helper.initialUsers.map(async user => {
-    //user.save()
+    // user.save()
     await api
       .post('/api/users')
       .send(user)
@@ -21,7 +21,7 @@ beforeEach( async () => {
   })
 
   await Promise.all(promiseArray)
-  /*for (let user of helper.initialUsers) {
+  /* for (let user of helper.initialUsers) {
     let saltRounds = 10
     let passwordHash = await bcrytp.hash(user.password, saltRounds)
     let newUser = {
@@ -31,7 +31,7 @@ beforeEach( async () => {
     }
     let userObject = new User(newUser)
     await userObject.save()
-  }*/
+  } */
   /*
   const userObjects = helper.initialUsers.map(async user => {
     const saltRounds = 10
@@ -44,11 +44,11 @@ beforeEach( async () => {
 
     return newUser
   })
-  
+
   await Promise.all(userObjects)
   console.log(userObjects)
-  const promiseArray = userObjects.map(user => user.save()) 
-  await Promise.all(promiseArray)*/
+  const promiseArray = userObjects.map(user => user.save())
+  await Promise.all(promiseArray) */
 })
 
 describe('username validations', () => {
@@ -59,7 +59,7 @@ describe('username validations', () => {
       password: 'hahaha'
     }
 
-    await api 
+    await api
       .post('/api/users')
       .send(user)
       .expect(400)
@@ -124,14 +124,14 @@ describe('username validations', () => {
     const username = usersAtEnd.map(user => user.username)
     expect(username).toContain(newUser.username)
   })
-}) 
+})
 
 describe('password tests', () => {
   test('if password is not passed an error is thrown', async () => {
     const usersAtStart = await helper.usersInDb()
     const newUser = {
       username: 'rgalindo',
-      name: 'rennan',
+      name: 'rennan'
     }
 
     await api

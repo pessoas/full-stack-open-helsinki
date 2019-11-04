@@ -29,10 +29,10 @@ test('all notes are returned', async () => {
 
 test('unique identifier is named id', async () => {
   const blog = await api.get('/api/blogs')
-  //console.log(blog)
+  // console.log(blog)
   const blogObjects = blog.body
   const promiseArray = blogObjects.map(blog => expect(blog.id).toBeDefined())
-  //expect(blog.body[0].id).toBeDefined()
+  // expect(blog.body[0].id).toBeDefined()
   await Promise.all(promiseArray)
 })
 
@@ -100,7 +100,7 @@ test('if deleted return status code 204', async () => {
   await api
     .delete(`/api/blogs/${blogToDelete.id}`)
     .expect(204)
-    
+
   const blogsAtEnd = await helper.blogsInDb()
   expect(blogsAtEnd.length).toBe(helper.initialBlogs.length - 1)
 })
@@ -122,7 +122,6 @@ test('updating a blogs number of likes', async () => {
 
   expect(blogsAtEnd.length).toBe(helper.initialBlogs.length)
   expect(blogUpdated.likes).toBe(100)
-
 })
 
 describe('total likes', () => {
@@ -166,4 +165,3 @@ describe('favourite blog', () => {
     mongoose.connection.close()
   })
 })
-
