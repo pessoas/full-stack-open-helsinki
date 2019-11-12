@@ -29,6 +29,6 @@ const notes = [
 */
 
 ReactDOM.render(
-    <App />,
-    document.getElementById('root')
+  <App />,
+  document.getElementById('root')
 )
